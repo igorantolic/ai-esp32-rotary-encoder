@@ -1,4 +1,4 @@
-#Arduino Esp32 Rotary Encoder Library
+# Arduino Esp32 Rotary Encoder Library
 
 This project is completly based on the (https://github.com/marcmerlin/IoTuz)
 Rotary encoder code is extracted from that implementataion and some additional features are included here.
