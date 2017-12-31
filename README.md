@@ -1,4 +1,4 @@
-# Arduino Esp32 Rotary Encoder Library
+# Arduino Esp32 / ESP8266 Rotary Encoder Library
 
 This project is completly based on the (https://github.com/marcmerlin/IoTuz)
 Rotary encoder code is extracted from that implementataion and some additional features are included here.
@@ -6,7 +6,7 @@ Rotary encoder code is extracted from that implementataion and some additional f
 
 ## Description
 
-This library enables your esp32 easy implementation of rotary encoder functionality in your application.
+This library enables  easy implementation of rotary encoder functionality in your application for ESP32, ESP8266 (or similar microcontroller).
 
 ## Installing
 
@@ -18,7 +18,7 @@ Restart the Arduino IDE and follow the examples located at
 
      File -> Examples -> Ai Esp32 Rotary Encoder
 
-## Connecting Rotary Encoder Module to your microcontroller ESP32 (or similar)
+## Connecting Rotary Encoder Module to your microcontroller ESP32, ESP8266 (or similar)
 
 This are instructions for "Rotary Encoder Module" which is actually Rotary Encoder with 2 resistors on board.  
 
@@ -51,6 +51,12 @@ If you didnt use suggested pins, adjust defines
 #define ROTARY_ENCODER_VCC_PIN 27
 ```
 
+For ESP8266 you can use Dx as pin names like in example:
+```c
+#define ROTARY_ENCODER_A_PIN D3
+#define ROTARY_ENCODER_B_PIN D2
+#define ROTARY_ENCODER_BUTTON_PIN D4
+```
 Then upload code to microcontroller.
 
 This example is initally set that you can adjust values 0 to 10. If you try to go beyond upper limit 10, since cycle option is set to true, it will restart from 0. Also tryinf to adjust lower than 0 will go back to 10.
