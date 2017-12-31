@@ -267,7 +267,7 @@ This methor returns value of enum - current button state
 		BUT_PUSHED = 1,
 		BUT_UP = 2,
 		BUT_RELEASED = 3,
-		BUT_DISABLED = 99, /*this state is after you call rotaryEncoder.disable(); */
+		BUT_DISABLED = 99, //this state is after you call rotaryEncoder.disable(); 
 	} ButtonState;
 	*/
 
