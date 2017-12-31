@@ -16,4 +16,4 @@ The downloaded code can be included as a new library into the IDE selecting the 
 
 Restart the Arduino IDE and follow the examples located at
 
-     File -> Examples -> AiEsp32RotaryEncoder
+     File -> Examples -> Ai Esp32 Rotary Encoder
