@@ -44,13 +44,12 @@ File -> Examples -> Ai Esp32 Rotary Encoder
 
 If you didnt use suggested pins, adjust defines
 
+```c
 #define ROTARY_ENCODER_A_PIN 32
-
 #define ROTARY_ENCODER_B_PIN 21
-
 #define ROTARY_ENCODER_BUTTON_PIN 25
-
 #define ROTARY_ENCODER_VCC_PIN 27
+```
 
 Then upload code to microcontroller.
 
@@ -62,98 +61,106 @@ Further pressing button will double the same limit to -4 ... 4. Then -8...8 and 
 
 ## Details
 
-step 1) include library using 
+### step 1) include library using 
 
+```c
 #include "AiEsp32RotaryEncoder.h"
+```
 
-step 2) set pins used. Important: A and B pins must support interrupts.
+### step 2) set pins used. Important: A and B pins must support interrupts.
 
+```c
 #define ROTARY_ENCODER_A_PIN 32
-
 #define ROTARY_ENCODER_B_PIN 21
-
 #define ROTARY_ENCODER_BUTTON_PIN 25
+#define ROTARY_ENCODER_VCC_PIN 27 /*put -1 of Rotary encoder Vcc is 
+                                    connected directly to 3,3V; 
+                                    else you can use declared output pin 
+                                    for powering rotary encoder */
+```
 
-#define ROTARY_ENCODER_VCC_PIN 27 /*put -1 of Rotary encoder Vcc is connected directly to 3,3V; else you can use declared output pin for powering rotary encoder */
+### step 3) declare your variable like rotaryEncoder
 
-step 3) declare your variable like rotaryEncoder
+```c
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(
+    ROTARY_ENCODER_A_PIN, 
+    ROTARY_ENCODER_B_PIN, 
+    ROTARY_ENCODER_BUTTON_PIN, 
+    ROTARY_ENCODER_VCC_PIN
+    );
+```
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN);
+### step 4) in setup() function you should call begin method to initialize encoder.
 
-step 4) in setup() function you should call begin method to initialize encoder.
-
+```c
 rotaryEncoder.begin();
+```
 
-step 5) in loop() call some function like rotary_loop();
+### step 5) in loop() call some function like rotary_loop();
 
+```c
 rotary_loop();
+```
 
-step 6) define function rotary_loop()
+### step 6) define function rotary_loop()
 
 Example:
 
+```c
+
 void rotary_loop() {
-
 	//first lets handle rotary encoder button click
-
 	if (rotaryEncoder.butEnc() == BUT_RELEASED) {
-
 		//we can process it here or call separate function like:
-
-		rotary_onButtonClick();
-
+    	rotary_onButtonClick();
 	}
 
 	//lets see if anything changed
-
 	int8_t encoderDelta = rotaryEncoder.encoder_changed();
 	
 	//optionally we can ignore whenever there is no change
-
 	if (encoderDelta == 0) return;
 	
-	//for some cases we only want to know if value is increased or decreased (typically for menu items)
-
+    //for some cases we only want to know if value is 
+    //increased or decreased (typically for menu items)
 	if (encoderDelta>0) Serial.print("+");
-
 	if (encoderDelta<0) Serial.print("-");
 
-	//for other cases we want to know what is current value. Additionally often we only want if something changed
-
+    //for other cases we want to know what is current value. 
+    //Additionally often we only want if something changed
 	//example: when using rotary encoder to set termostat temperature, or sound volume etc
 	
 	//if value is changed compared to our last read
-
 	if (encoderDelta!=0) {
-
 		//now we need current value
-
 		int16_t encoderValue = rotaryEncoder.read_encoder();
 
 		//process new value. Here is simple output.
-
 		Serial.print("Value: ");
-
 		Serial.println(encoderValue);
 
 	}
-	
 }
+```
 
-step 7) if you use separate function for processing rotary encoder button click, implmement it
+### step 7) if you use separate function for processing rotary encoder button click, implmement it
 
 In step 6 we call rotary_onButtonClick();
 
 example: 
 
+```c
 void rotary_onButtonClick() {
 
 	rotaryEncoder.disable();
 
 }
+```
 
 In this example we disable encoder on first click on button. Dont expect any further effects before you call 
 
+```c
 rotaryEncoder.enable();
+```
 
 ...for obvious reasons
