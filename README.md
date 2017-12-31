@@ -177,7 +177,12 @@ Call to define local variable. 4 parameters are pin numbers.
 #define ROTARY_ENCODER_BUTTON_PIN 25
 #define ROTARY_ENCODER_VCC_PIN 27
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN);
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(
+	ROTARY_ENCODER_A_PIN, 
+	ROTARY_ENCODER_B_PIN, 
+	ROTARY_ENCODER_BUTTON_PIN, 
+	ROTARY_ENCODER_VCC_PIN
+	);
 //or empty constructor
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder();
 /* Note: in case of empty constructor these are fefault pins:
@@ -226,7 +231,7 @@ Please note that there is a limit check. If value is lower than low limit low li
 
 ### disable and enable
 
-This wil disable rotary movement or button events. You must call enable to contunue getting new values or button clicks.
+This will disable rotary movement or button events. You must call enable to contunue getting new values or button clicks.
 ```c		
 	rotaryEncoder.disable();
 	rotaryEncoder.enable();
