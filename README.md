@@ -110,13 +110,13 @@ Example:
 
 void rotary_loop() {
 	//first lets handle rotary encoder button click
-	if (rotaryEncoder.butEnc() == BUT_RELEASED) {
+	if (rotaryEncoder.currentButtonState() == BUT_RELEASED) {
 		//we can process it here or call separate function like:
     	rotary_onButtonClick();
 	}
 
 	//lets see if anything changed
-	int8_t encoderDelta = rotaryEncoder.encoder_changed();
+	int8_t encoderDelta = rotaryEncoder.encoderChanged();
 	
 	//optionally we can ignore whenever there is no change
 	if (encoderDelta == 0) return;
@@ -133,7 +133,7 @@ void rotary_loop() {
 	//if value is changed compared to our last read
 	if (encoderDelta!=0) {
 		//now we need current value
-		int16_t encoderValue = rotaryEncoder.read_encoder();
+		int16_t encoderValue = rotaryEncoder.readEncoder();
 
 		//process new value. Here is simple output.
 		Serial.print("Value: ");
@@ -164,3 +164,58 @@ rotaryEncoder.enable();
 ```
 
 ...for obvious reasons
+
+## List of methods 
+
+### Constructor 
+
+```c
+	AiEsp32RotaryEncoder(
+		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
+		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
+		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
+		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN
+	);
+```
+
+### 
+```c
+	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
+```
+
+### 
+```c		
+	void begin();
+```
+
+### 
+```c		
+	void reset(int16_t newValue = 0);
+```
+
+### 
+```c		
+	void enable();
+```
+
+### 
+```c		
+	void disable();
+```
+
+### 
+```c		
+	int16_t readEncoder();
+```
+
+### 
+```c		
+	int16_t encoderChanged();
+```
+
+### 
+```c		
+	ButtonState currentButtonState();
+```
+
+

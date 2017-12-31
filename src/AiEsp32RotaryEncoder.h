@@ -22,10 +22,13 @@ typedef enum {
 	BUT_UP = 2,
 	BUT_RELEASED = 3,
 	BUT_DISABLED = 99,
-} ButtState;
+} ButtonState;
 
 class AiEsp32RotaryEncoder {
-public:
+	
+private:
+
+public: 
 	AiEsp32RotaryEncoder(
 		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
@@ -35,15 +38,14 @@ public:
 	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
 		
 	void begin();
-	void reset();
+	void reset(int16_t newValue = 0);
 	void enable();
 	void disable();
-	int16_t read_encoder();
-	int16_t encoder_changed();
-	ButtState butEnc();
+	int16_t readEncoder();
+	int16_t encoderChanged();
+	ButtonState currentButtonState();
 
-private:
-	ButtState _but();
+
 };
 #endif
 

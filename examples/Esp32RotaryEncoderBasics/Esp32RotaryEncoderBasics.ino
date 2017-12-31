@@ -27,13 +27,13 @@ void rotary_onButtonClick() {
 
 void rotary_loop() {
 	//first lets handle rotary encoder button click
-	if (rotaryEncoder.butEnc() == BUT_RELEASED) {
+	if (rotaryEncoder.currentButtonState() == BUT_RELEASED) {
 		//we can process it here or call separate function like:
 		rotary_onButtonClick();
 	}
 
 	//lets see if anything changed
-	int8_t encoderDelta = rotaryEncoder.encoder_changed();
+	int8_t encoderDelta = rotaryEncoder.encoderChanged();
 	
 	//optionally we can ignore whenever there is no change
 	if (encoderDelta == 0) return;
@@ -48,11 +48,11 @@ void rotary_loop() {
 	//if value is changed compared to our last read
 	if (encoderDelta!=0) {
 		//now we need current value
-		int16_t encoderValue = rotaryEncoder.read_encoder();
+		int16_t encoderValue = rotaryEncoder.readEncoder();
 		//process new value. Here is simple output.
 		Serial.print("Value: ");
 		Serial.println(encoderValue);
-	}
+	} 
 	
 }
 

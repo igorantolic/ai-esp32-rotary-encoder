@@ -5,8 +5,6 @@
 #include "AiEsp32RotaryEncoder.h"
 
 volatile int16_t encoder0Pos = 0;
-int16_t _minEncoderValue = -1 << 15;
-int16_t _maxEncoderValue = 1 << 15;
 bool _circleValues = false;
 bool isEnabled = true;
 
@@ -15,7 +13,10 @@ uint8_t encoderBPin      = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
 uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
 uint8_t encoderVccPin    = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
 
-void read_encoder_ISR()
+int16_t _minEncoderValue = -1 << 15;
+int16_t _maxEncoderValue = 1 << 15;
+
+void readEncoder_ISR()
 {
 	if (!isEnabled) {
 		return;
@@ -59,14 +60,14 @@ void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEnc
 
 
 
-int16_t AiEsp32RotaryEncoder::read_encoder()
+int16_t AiEsp32RotaryEncoder::readEncoder()
 {
 	return encoder0Pos/2;
 }
 
 int16_t lastReadEncoder0Pos = 0;
-int16_t AiEsp32RotaryEncoder::encoder_changed() {
-	int16_t _encoder0Pos = read_encoder();
+int16_t AiEsp32RotaryEncoder::encoderChanged() {
+	int16_t _encoder0Pos = readEncoder();
 	
 	int16_t encoder0Diff = _encoder0Pos - lastReadEncoder0Pos;
 
@@ -82,18 +83,13 @@ void AiEsp32RotaryEncoder::begin()
 	}
 	//Serial.println("Enable rotary encoder ISR:");
 	// Initialize rotary encoder reading and decoding
-	attachInterrupt(encoderAPin, read_encoder_ISR, CHANGE);
-	attachInterrupt(encoderBPin, read_encoder_ISR, CHANGE);
+	attachInterrupt(encoderAPin, readEncoder_ISR, CHANGE);
+	attachInterrupt(encoderBPin, readEncoder_ISR, CHANGE);
 	pinMode(encoderButtonPin, INPUT_PULLUP);
 
 }
 
-ButtState AiEsp32RotaryEncoder::butEnc()
-{
-	return(_but());
-}
-
-ButtState AiEsp32RotaryEncoder::_but()
+ButtonState AiEsp32RotaryEncoder::currentButtonState()
 {
 	if (!isEnabled) {
 		return BUT_DISABLED;
@@ -113,13 +109,16 @@ ButtState AiEsp32RotaryEncoder::_but()
 	{
 		previous_butt_state = false;
 		//Serial.println("Button Released");
-		return BUT_RELEASED;
+		return BUT_RELEASED; 
 	}
 	return (butt_state ? BUT_DOWN : BUT_UP);
 }
 
-void AiEsp32RotaryEncoder::reset() {
-	encoder0Pos = 0;
+void AiEsp32RotaryEncoder::reset(int16_t newValue) {
+	newValue = newValue * 2;
+	encoder0Pos = newValue;
+	if (encoder0Pos > _maxEncoderValue) encoder0Pos = _circleValues?_minEncoderValue : _maxEncoderValue;
+	if (encoder0Pos < _minEncoderValue) encoder0Pos = _circleValues ? _maxEncoderValue : _minEncoderValue;	
 }
 
 void AiEsp32RotaryEncoder::enable() {
