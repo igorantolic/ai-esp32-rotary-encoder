@@ -33,7 +33,7 @@ void rotary_loop() {
 	}
 
 	//lets see if anything changed
-	int8_t encoderDelta = rotaryEncoder.encoderChanged();
+	int16_t encoderDelta = rotaryEncoder.encoderChanged();
 	
 	//optionally we can ignore whenever there is no change
 	if (encoderDelta == 0) return;
