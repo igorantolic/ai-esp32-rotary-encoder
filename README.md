@@ -169,53 +169,108 @@ rotaryEncoder.enable();
 
 ### Constructor 
 
+
+Call to define local variable. 4 parameters are pin numbers.
 ```c
-	AiEsp32RotaryEncoder(
-		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
-		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
-		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
-		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN
-	);
+#define ROTARY_ENCODER_A_PIN 32
+#define ROTARY_ENCODER_B_PIN 21
+#define ROTARY_ENCODER_BUTTON_PIN 25
+#define ROTARY_ENCODER_VCC_PIN 27
+
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN);
+//or empty constructor
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder();
+/* Note: in case of empty constructor these are fefault pins:
+#define ROTARY_ENCODER_A_PIN 32
+#define ROTARY_ENCODER_B_PIN 21
+#define ROTARY_ENCODER_BUTTON_PIN 25
+#define ROTARY_ENCODER_VCC_PIN 27
+*/
 ```
 
-### 
+### setBoundaries (optional)
+
+sets minimum and maximum value. 
+Additionally set circleValues to false if you want to stop at min or max limits.
+If you want to min to continue with max value or vice versa set to true,
+
+For example when using menu with 4 items you can call
 ```c
-	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
+	rotaryEncoder.setBoundaries(1,4,true);
+```
+rotating right will select valus 1, 2, 3, 4, 1 ,2, 3, ....
+
+while rotating left will select valus 1, 4, 3,2,1,4,3, ....
+
+### begin - initialization method
+
+You must call this in setup()
+```c		
+void setup() {
+	rotaryEncoder.begin();
+	//...
+}
 ```
 
-### 
-```c		
-	void begin();
+### reset to zero or selected value
+
+selected value will change to selected value. If value not provided 0 is assumed.
+Please note that there is a limit check. If value is lower than low limit low limit will be set. The same is for maximum limit.
+
+```c
+	//reaset to 0		
+	rotaryEncoder.reset();
+	//reaset to 3	
+	rotaryEncoder.reset(3);
 ```
 
-### 
+### disable and enable
+
+This wil disable rotary movement or button events. You must call enable to contunue getting new values or button clicks.
 ```c		
-	void reset(int16_t newValue = 0);
+	rotaryEncoder.disable();
+	rotaryEncoder.enable();
 ```
 
-### 
+
+### readEncoder
+
+This methot will fetch current value of encoder.
 ```c		
-	void enable();
+	int16_t currentValue = rotaryEncoder.readEncoder();
 ```
 
-### 
+### encoderChanged
+
+This methot will return delta (absolute difference) comparing to previous read.
 ```c		
-	void disable();
+	//you can react only on changes
+	int16_t encoderDelta = rotaryEncoder.encoderChanged();
+	if (encoderDelta>0) Serial.print("+");
+	if (encoderDelta<0) Serial.print("-");	
 ```
 
-### 
-```c		
-	int16_t readEncoder();
-```
+### currentButtonState
 
-### 
+This methor returns value of enum - current button state
 ```c		
-	int16_t encoderChanged();
-```
+	ButtonState current  = rotaryEncoder.currentButtonState();
+	// or
+	if (rotaryEncoder.currentButtonState() == BUT_RELEASED) {
+		Serial.println("Click!");	
+	}	
 
-### 
-```c		
-	ButtonState currentButtonState();
+	/*
+	Button values are:
+	typedef enum {
+		BUT_DOWN = 0,
+		BUT_PUSHED = 1,
+		BUT_UP = 2,
+		BUT_RELEASED = 3,
+		BUT_DISABLED = 99, /*this state is after you call rotaryEncoder.disable(); */
+	} ButtonState;
+	*/
+
 ```
 
 
