@@ -85,8 +85,9 @@ void AiEsp32RotaryEncoder::begin()
 	// Initialize rotary encoder reading and decoding
 	attachInterrupt(encoderAPin, readEncoder_ISR, CHANGE);
 	attachInterrupt(encoderBPin, readEncoder_ISR, CHANGE);
-	pinMode(encoderButtonPin, INPUT_PULLUP);
-
+	if (encoderButtonPin >= 0) {
+		pinMode(encoderButtonPin, INPUT_PULLUP);
+	}
 }
 
 ButtonState AiEsp32RotaryEncoder::currentButtonState()
