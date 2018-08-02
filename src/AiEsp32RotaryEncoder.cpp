@@ -47,8 +47,8 @@ AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder
 	encoderBPin = encoder_BPin;
 	encoderButtonPin = encoder_ButtonPin;
 	encoderVccPin = encoder_VccPin;
-	pinMode(encoderAPin, INPUT_PULLUP);
-	pinMode(encoderBPin, INPUT_PULLUP);
+	pinMode(encoderAPin, INPUT);
+	pinMode(encoderBPin, INPUT);
 }
 
 void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEncoderValue, bool circleValues)
