@@ -83,8 +83,8 @@ void AiEsp32RotaryEncoder::begin()
 	}
 	//Serial.println("Enable rotary encoder ISR:");
 	// Initialize rotary encoder reading and decoding
-	attachInterrupt(encoderAPin, readEncoder_ISR, CHANGE);
-	attachInterrupt(encoderBPin, readEncoder_ISR, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(encoderAPin), readEncoder_ISR, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(encoderBPin), readEncoder_ISR, CHANGE);
 	if (encoderButtonPin >= 0) {
 		pinMode(encoderButtonPin, INPUT_PULLUP);
 	}
