@@ -4,6 +4,8 @@
 
 #include "AiEsp32RotaryEncoder.h"
 
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
 volatile int16_t encoder0Pos = 0;
 bool _circleValues = false;
 bool isEnabled = true;
@@ -16,28 +18,27 @@ uint8_t encoderVccPin    = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
 int16_t _minEncoderValue = -1 << 15;
 int16_t _maxEncoderValue = 1 << 15;
 
-void readEncoder_ISR()
+void IRAM_ATTR readEncoder_ISR()
 {
-	if (!isEnabled) {
-		return;
+	portENTER_CRITICAL_ISR(&mux);
+	if (isEnabled) {
+		static uint8_t old_AB = 0;
+		// grey code
+		// http://hades.mech.northwestern.edu/index.php/Rotary_Encoder
+		// also read up on 'Understanding Quadrature Encoded Signals'
+		// https://www.pjrc.com/teensy/td_libs_Encoder.html
+		// another interesting lib: https://github.com/0xPIT/encoder/blob/arduino/ClickEncoder.cpp
+		static int8_t enc_states[] = { 0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0 };
+
+		old_AB <<= 2;
+		old_AB |= ((digitalRead(encoderBPin)) ? (1 << 1) : 0) | ((digitalRead(encoderAPin)) ? (1 << 0) : 0);
+
+		encoder0Pos += (enc_states[(old_AB & 0x0f)]);
+
+		if (encoder0Pos > _maxEncoderValue) encoder0Pos = _circleValues?_minEncoderValue : _maxEncoderValue;
+		if (encoder0Pos < _minEncoderValue) encoder0Pos = _circleValues ? _maxEncoderValue : _minEncoderValue;
 	}
-	static uint8_t old_AB = 0;
-	// grey code
-	// http://hades.mech.northwestern.edu/index.php/Rotary_Encoder
-	// also read up on 'Understanding Quadrature Encoded Signals'
-	// https://www.pjrc.com/teensy/td_libs_Encoder.html
-	// another interesting lib: https://github.com/0xPIT/encoder/blob/arduino/ClickEncoder.cpp
-	static int8_t enc_states[] = { 0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0 };
-
-	old_AB <<= 2;
-	old_AB |= ((digitalRead(encoderBPin)) ? (1 << 1) : 0) | ((digitalRead(encoderAPin)) ? (1 << 0) : 0);
-
-	encoder0Pos += (enc_states[(old_AB & 0x0f)]);
-
-	if (encoder0Pos > _maxEncoderValue) encoder0Pos = _circleValues?_minEncoderValue : _maxEncoderValue;
-	if (encoder0Pos < _minEncoderValue) encoder0Pos = _circleValues ? _maxEncoderValue : _minEncoderValue;
-
-
+	portEXIT_CRITICAL_ISR(&mux);
 }
 
 
