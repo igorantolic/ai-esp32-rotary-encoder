@@ -1,7 +1,7 @@
 # Arduino Esp32 / ESP8266 MULTIPLE Encoder Library
 
 This project is based on the (https://github.com/igorantolic/ai-esp32-rotary-encoder) with only main difference that it supports
-multiple instances on encoders. Original library supported only one instance, but this project allows you to creade more instance of encoders like this:
+multiple instances on encoders. Original library supported only one instance, but this project allows you to create more instance of encoders like this:
 
 ```c
 #include "AiEsp32RotaryEncoder.h"
