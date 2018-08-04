@@ -1,8 +1,29 @@
-# Arduino Esp32 / ESP8266 Rotary Encoder Library
+# Arduino Esp32 / ESP8266 MULTIPLE Encoder Library
 
-This project is completly based on the (https://github.com/marcmerlin/IoTuz)
-Rotary encoder code is extracted from that implementataion and some additional features are included here.
+This project is based on the (https://github.com/igorantolic/ai-esp32-rotary-encoder) with only main difference that it supports
+multiple instances on encoders. Original library supported only one instance, but this project allows you to create more instance of encoders like this:
 
+```c
+#include "AiEsp32RotaryEncoder.h"
+#define ROTARY_ENCODER2_A_PIN GPIO_NUM_16
+#define ROTARY_ENCODER2_B_PIN GPIO_NUM_4
+#define ROTARY_ENCODER1_A_PIN GPIO_NUM_17
+#define ROTARY_ENCODER1_B_PIN GPIO_NUM_5
+
+AiEsp32RotaryEncoder rotaryEncoder1 = AiEsp32RotaryEncoder(ROTARY_ENCODER1_A_PIN, ROTARY_ENCODER1_B_PIN, -1, -1);
+AiEsp32RotaryEncoder rotaryEncoder2 = AiEsp32RotaryEncoder(ROTARY_ENCODER2_A_PIN, ROTARY_ENCODER2_B_PIN, -1, -1);
+```
+
+in setup() of arduino:
+```c
+	rotaryEncoder1.begin();
+	rotaryEncoder1.setup([]{rotaryEncoder1.readEncoder_ISR();});
+
+	rotaryEncoder2.begin();
+	rotaryEncoder2.setup([]{rotaryEncoder2.readEncoder_ISR();});
+```
+
+Rotary encoder main interrupt code is extracted from (https://github.com/marcmerlin/IoTuz) and some additional features are included here.
 
 ## Description
 
@@ -100,6 +121,12 @@ AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(
 
 ```c
 rotaryEncoder.begin();
+```
+
+### step 4a) in setup() function you should call begin method to initialize encoder.
+
+```c
+rotaryEncoder.setup([]{rotaryEncoder.readEncoder_ISR();});
 ```
 
 ### step 5) in loop() call some function like rotary_loop();
