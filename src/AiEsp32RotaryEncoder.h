@@ -40,12 +40,11 @@ private:
 	int16_t _minEncoderValue = -1 << 15;
 	int16_t _maxEncoderValue = 1 << 15;
 
-	int8_t enc_states[];
 	uint8_t old_AB;
 	int16_t lastReadEncoder0Pos;
 	bool previous_butt_state;
 
-	int8_t enc_state[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
+	int8_t enc_states[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
 	void(*ISR_callback)();
 
 public: 

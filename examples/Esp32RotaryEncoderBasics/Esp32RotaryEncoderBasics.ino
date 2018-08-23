@@ -62,6 +62,7 @@ void setup() {
 
 	//we must initialize rorary encoder 
 	rotaryEncoder.begin();
+	rotaryEncoder.setup([]{rotaryEncoder.readEncoder_ISR();});
 	//optionally we can set boundaries and if values should cycle or not
 	rotaryEncoder.setBoundaries(0, 10, true); //minValue, maxValue, cycle values (when max go to min and vice versa)
 }
