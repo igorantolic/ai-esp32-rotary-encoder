@@ -59,16 +59,16 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 
 		this->encoder0Pos += ( this->enc_states[( this->old_AB & 0x0f )]);	
 
-		if (this->encoder0Pos > this->_maxEncoderValue)
+		if (this->encoder0Pos > (this->_maxEncoderValue))
 			this->encoder0Pos = this->_circleValues ? this->_minEncoderValue : this->_maxEncoderValue;
-		if (this->encoder0Pos < this->_minEncoderValue)
+		if (this->encoder0Pos < (this->_minEncoderValue))
 			this->encoder0Pos = this->_circleValues ? this->_maxEncoderValue : this->_minEncoderValue;		
 
 		//Serial.print("encoder0Pos= ");
 		//Serial.println(this->encoder0Pos);	
 		//Serial.println("---------------");
 	}
-	portEXIT_CRITICAL_ISR(&mux);
+	portEXIT_CRITICAL_ISR(&(this->mux));
 }
 
 
