@@ -72,7 +72,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 }
 
 
-AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, uint8_t encoder_VccPin)
+AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, uint8_t encoder_VccPin, uint8_t encoderSteps)
 {
 	this->old_AB = 0;
 	
@@ -80,14 +80,15 @@ AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder
 	this->encoderBPin = encoder_BPin;
 	this->encoderButtonPin = encoder_ButtonPin;
 	this->encoderVccPin = encoder_VccPin;
+	this->encoderSteps = encoderSteps;
 	pinMode(this->encoderAPin, INPUT);
 	pinMode(this->encoderBPin, INPUT);
 }
 
 void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEncoderValue, bool circleValues)
 {
-	this->_minEncoderValue = minEncoderValue * 2;
-	this->_maxEncoderValue = maxEncoderValue * 2;
+	this->_minEncoderValue = minEncoderValue * this->encoderSteps;
+	this->_maxEncoderValue = maxEncoderValue * this->encoderSteps;
 	this->_circleValues = circleValues;
 }
 
@@ -95,7 +96,7 @@ void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEnc
 
 int16_t AiEsp32RotaryEncoder::readEncoder()
 {
-	return (this->encoder0Pos / 2);
+	return (this->encoder0Pos / this->encoderSteps);
 }
 
 int16_t AiEsp32RotaryEncoder::encoderChanged() {
@@ -119,7 +120,8 @@ void AiEsp32RotaryEncoder::begin()
 	this->lastReadEncoder0Pos = 0;
 	//Serial.begin(115200);
 	if (this->encoderVccPin >= 0) {
-		pinMode(this->encoderVccPin, OUTPUT);	digitalWrite(this->encoderVccPin, 1);//Vcc for encoder 
+		pinMode(this->encoderVccPin, OUTPUT);	
+		digitalWrite(this->encoderVccPin, 1);//Vcc for encoder 
 	}
 	//Serial.println("Enable rotary encoder ISR:");
 	// Initialize rotary encoder reading and decoding
@@ -154,7 +156,7 @@ ButtonState AiEsp32RotaryEncoder::currentButtonState()
 }
 
 void AiEsp32RotaryEncoder::reset(int16_t newValue_) {
-	newValue_ = newValue_ * 2;
+	newValue_ = newValue_ * this->encoderSteps;
 	this->encoder0Pos = newValue_;
 	if (this->encoder0Pos > this->_maxEncoderValue) this->encoder0Pos = this->_circleValues ? this->_minEncoderValue : this->_maxEncoderValue;
 	if (this->encoder0Pos < this->_minEncoderValue) this->encoder0Pos = this->_circleValues ? this->_maxEncoderValue : this->_minEncoderValue;	

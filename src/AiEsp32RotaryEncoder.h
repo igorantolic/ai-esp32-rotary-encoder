@@ -15,6 +15,7 @@
 #define AIESP32ROTARYENCODER_DEFAULT_B_PIN 26
 #define AIESP32ROTARYENCODER_DEFAULT_BUT_PIN 15
 #define AIESP32ROTARYENCODER_DEFAULT_VCC_PIN -1
+#define AIESP32ROTARYENCODER_DEFAULT_STEPS 2
 
 typedef enum {
 	BUT_DOWN = 0,
@@ -36,6 +37,7 @@ private:
 	uint8_t encoderBPin      = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
 	uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
 	uint8_t encoderVccPin    = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
+	uint8_t encoderSteps     = AIESP32ROTARYENCODER_DEFAULT_STEPS;
 
 	int16_t _minEncoderValue = -1 << 15;
 	int16_t _maxEncoderValue = 1 << 15;
@@ -52,7 +54,8 @@ public:
 		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
 		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
-		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN
+		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
+		uint8_t encoderSteps  = AIESP32ROTARYENCODER_DEFAULT_STEPS
 	);
 	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
 	void IRAM_ATTR readEncoder_ISR();
