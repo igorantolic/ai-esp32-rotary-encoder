@@ -30,6 +30,35 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 	portEXIT_CRITICAL_ISR(&(this->mux));
 }
 
+void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
+{
+	portENTER_CRITICAL_ISR(&(this->buttonMux));
+
+	uint8_t butt_state = !digitalRead(this->encoderButtonPin);
+
+	if (!this->isEnabled)
+	{
+		buttonState = BUT_DISABLED;
+	}
+	else if (butt_state && !this->previous_butt_state)
+	{
+		this->previous_butt_state = true;
+		//Serial.println("Button Pushed");
+		buttonState = BUT_PUSHED;		
+	}
+	else if (!butt_state && this->previous_butt_state)
+	{
+		this->previous_butt_state = false;
+		//Serial.println("Button Released");
+		buttonState = BUT_RELEASED;		
+	}
+	else
+	{
+		buttonState = (butt_state ? BUT_DOWN : BUT_UP);
+	}
+
+	portEXIT_CRITICAL_ISR(&(this->buttonMux));
+}
 
 AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, uint8_t encoder_VccPin, uint8_t encoderSteps)
 {
@@ -67,12 +96,11 @@ int16_t AiEsp32RotaryEncoder::encoderChanged() {
 	return encoder0Diff;
 }
 
-void AiEsp32RotaryEncoder::setup(void (*ISR_callback)(void))
+void AiEsp32RotaryEncoder::setup(void (*ISR_callback)(void), void (*ISR_button)(void))
 {
-	ESP_LOGD(LOG_TAG, "Enabling rotary encoder ISR.");
-	
 	attachInterrupt(digitalPinToInterrupt(this->encoderAPin), ISR_callback, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(this->encoderBPin), ISR_callback, CHANGE);
+	attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, CHANGE);
 }
 
 void AiEsp32RotaryEncoder::begin()
@@ -92,24 +120,7 @@ void AiEsp32RotaryEncoder::begin()
 
 ButtonState AiEsp32RotaryEncoder::currentButtonState()
 {
-	if (!this->isEnabled)
-		return BUT_DISABLED;
-	
-	uint8_t butt_state = !digitalRead(this->encoderButtonPin);
-
-	if (butt_state && !this->previous_butt_state)
-	{
-		this->previous_butt_state = true;
-		ESP_LOGD(LOG_TAG, "Button Pushed");
-		return BUT_PUSHED;
-	}
-	if (!butt_state && this->previous_butt_state)
-	{
-		this->previous_butt_state = false;
-		ESP_LOGD(LOG_TAG, "Button Released");
-		return BUT_RELEASED; 
-	}
-	return (butt_state ? BUT_DOWN : BUT_UP);
+	return buttonState;
 }
 
 void AiEsp32RotaryEncoder::reset(int16_t newValue_) {
