@@ -29,6 +29,7 @@ class AiEsp32RotaryEncoder {
 	
 private:
 	portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+	portMUX_TYPE buttonMux = portMUX_INITIALIZER_UNLOCKED;
 	volatile int16_t encoder0Pos = 0;
 	bool _circleValues = false;
 	bool isEnabled = true;
@@ -46,8 +47,11 @@ private:
 	int16_t lastReadEncoder0Pos;
 	bool previous_butt_state;
 
+	ButtonState buttonState;
+
 	int8_t enc_states[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
 	void(*ISR_callback)();
+	void(*ISR_button)();
 
 public: 
 	AiEsp32RotaryEncoder(
@@ -59,8 +63,9 @@ public:
 	);
 	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
 	void IRAM_ATTR readEncoder_ISR();
+	void IRAM_ATTR readButton_ISR();
 	
-	void setup(void (*ISR_callback)(void));
+	void setup(void (*ISR_callback)(void), void (*ISR_button)(void));
 	void begin();
 	void reset(int16_t newValue = 0);
 	void enable();
