@@ -1,19 +1,3 @@
-# New feature added 02/2021 - accelerated movement
-
-In case a range to select is large, for example - select a value between 0 and 1000 and we want 785, without accelerateion you need long time to get to that number.
-However using new implemented acceleration, faster you turn, faster will the value raise.For fine tuning just slow down.
-In new example imagine any random naumber between 1 and 1000 and try to select it as fast as you can using example code, and after that disable acceleration and try again.
-
-rotaryEncoder.setAcceleration(250); 
-this will set acceleration; larger number = more accelearation; 0 or 1 means disabled acceleration
-
-
-rotaryEncoder.disableAcceleration(); 
-This will disable acceleration (now enabled by default) in case you dont need one.
-
-Recomendation - turn off for small ranges; but turn on when you select from more than 50 values in range.
-
-
 # Arduino Esp32 / ESP8266 MULTIPLE Encoder Library
 
 This project is based on the (https://github.com/igorantolic/ai-esp32-rotary-encoder) with only main difference that it supports

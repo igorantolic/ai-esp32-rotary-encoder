@@ -12,29 +12,33 @@ GND - to microcontroler GND
 #define ROTARY_ENCODER_A_PIN 32
 #define ROTARY_ENCODER_B_PIN 21
 #define ROTARY_ENCODER_BUTTON_PIN 25
-#define ROTARY_ENCODER_VCC_PIN 27 /*put -1 of Rotary encoder Vcc is connected directly to 3,3V; else you can use declared output pin for powering rotary encoder */
+#define ROTARY_ENCODER_VCC_PIN -1 /* 27 put -1 of Rotary encoder Vcc is connected directly to 3,3V; else you can use declared output pin for powering rotary encoder */
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN);
+//depending on your encoder - try 1,2 or 4 to get expected behaviour
+//#define ROTARY_ENCODER_STEPS 1
+//#define ROTARY_ENCODER_STEPS 2
+#define ROTARY_ENCODER_STEPS 4
+
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, 4);
 
 int test_limits = 2;
 
 void rotary_onButtonClick()
 {
+	static unsigned long lastTimePressed = 0;
+	if (millis() - lastTimePressed < 500)
+		return; //ignore multiple press in that time milliseconds
+	lastTimePressed = millis();
 	//rotaryEncoder.reset();
 	//rotaryEncoder.disable();
-	rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
-	test_limits *= 2;
+	/*rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
+	test_limits *= 2;*/
+	Serial.print("button pressed at ");
+	Serial.println(millis());
 }
 
 void rotary_loop()
 {
-	//first lets handle rotary encoder button click
-	if (rotaryEncoder.currentButtonState() == BUT_RELEASED)
-	{
-		//we can process it here or call separate function like:
-		rotary_onButtonClick();
-	}
-
 	//lets see if anything changed
 	int16_t encoderDelta = rotaryEncoder.encoderChanged();
 
@@ -62,23 +66,29 @@ void rotary_loop()
 	}
 }
 
-void buttonPressed()
-{
-	Serial.println("button pressed");
-}
-
 void setup()
 {
 
 	Serial.begin(115200);
 
-	//we must initialize rorary encoder
+	//we must initialize rotary encoder
 	rotaryEncoder.begin();
+
 	rotaryEncoder.setup(
 		[] { rotaryEncoder.readEncoder_ISR(); },
-		[] { buttonPressed(); });
+		[] { rotary_onButtonClick(); });
 	//optionally we can set boundaries and if values should cycle or not
-	rotaryEncoder.setBoundaries(0, 10, true); //minValue, maxValue, cycle values (when max go to min and vice versa)
+	bool circleValues = false;
+	rotaryEncoder.setBoundaries(0, 1000, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+
+	/*Rotary acceleration introduced 25.2.2021.
+   * in case range to select is huge, for example - select a value between 0 and 1000 and we want 785
+   * without accelerateion you need long time to get to that number
+   * Using acceleration, faster you turn, faster will the value raise.
+   * For fine tuning slow down.
+   */
+	//rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
+	rotaryEncoder.setAcceleration(250); //or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
 }
 
 void loop()

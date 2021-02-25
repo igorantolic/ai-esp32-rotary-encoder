@@ -5,9 +5,9 @@
 #define _AIESP32ROTARYENCODER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
-	#include "Arduino.h"
+#include "Arduino.h"
 #else
-	#include "WProgram.h"
+#include "WProgram.h"
 #endif
 
 // Rotary Encocer
@@ -17,7 +17,8 @@
 #define AIESP32ROTARYENCODER_DEFAULT_VCC_PIN -1
 #define AIESP32ROTARYENCODER_DEFAULT_STEPS 2
 
-typedef enum {
+typedef enum
+{
 	BUT_DOWN = 0,
 	BUT_PUSHED = 1,
 	BUT_UP = 2,
@@ -25,20 +26,26 @@ typedef enum {
 	BUT_DISABLED = 99,
 } ButtonState;
 
-class AiEsp32RotaryEncoder {
-	
+class AiEsp32RotaryEncoder
+{
+
 private:
 	portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 	portMUX_TYPE buttonMux = portMUX_INITIALIZER_UNLOCKED;
 	volatile int16_t encoder0Pos = 0;
+
+	volatile int8_t lastMovementDirection = 0; //1 right; -1 left
+	volatile unsigned long lastMovementAt = 0;
+	unsigned long rotaryAccelerationCoef = 150;
+
 	bool _circleValues = false;
 	bool isEnabled = true;
 
-	uint8_t encoderAPin      = AIESP32ROTARYENCODER_DEFAULT_A_PIN;
-	uint8_t encoderBPin      = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
+	uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN;
+	uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
 	uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
-	uint8_t encoderVccPin    = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
-	uint8_t encoderSteps     = AIESP32ROTARYENCODER_DEFAULT_STEPS;
+	uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
+	uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
 
 	int16_t _minEncoderValue = -1 << 15;
 	int16_t _maxEncoderValue = 1 << 15;
@@ -49,22 +56,22 @@ private:
 
 	ButtonState buttonState;
 
-	int8_t enc_states[16] = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0};
-	void(*ISR_callback)();
-	void(*ISR_button)();
+	int8_t enc_states[16] = {0, -1, 1, 0, 1, 0, 0, -1, -1, 0, 0, 1, 0, 1, -1, 0};
+	void (*ISR_callback)();
+	void (*ISR_button)();
 
-public: 
+public:
 	AiEsp32RotaryEncoder(
 		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
 		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
 		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
-		uint8_t encoderSteps  = AIESP32ROTARYENCODER_DEFAULT_STEPS
-	);
+		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
 	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
 	void IRAM_ATTR readEncoder_ISR();
 	void IRAM_ATTR readButton_ISR();
-	
+
+	void setup(void (*ISR_callback)(void));
 	void setup(void (*ISR_callback)(void), void (*ISR_button)(void));
 	void begin();
 	void reset(int16_t newValue = 0);
@@ -73,6 +80,8 @@ public:
 	int16_t readEncoder();
 	int16_t encoderChanged();
 	ButtonState currentButtonState();
+	unsigned long getAcceleration() { return this->rotaryAccelerationCoef; }
+	void setAcceleration(unsigned long acceleration) { this->rotaryAccelerationCoef = acceleration; }
+	void disableAcceleration() { setAcceleration(0); }
 };
 #endif
-
