@@ -3,11 +3,19 @@
 
 /*
 connecting Rotary encoder
-CLK (A pin) - to any microcontroler intput pin with interrupt -> in this example pin 32
-DT (B pin) - to any microcontroler intput pin with interrupt -> in this example pin 21
-SW (button pin) - to any microcontroler intput pin -> in this example pin 25
-VCC - to microcontroler VCC (then set ROTARY_ENCODER_VCC_PIN -1) or in this example pin 25
+
+Rotary encoder side    MICROCONTROLLER side  
+-------------------    ---------------------------------------------------------------------
+CLK (A pin)            any microcontroler intput pin with interrupt -> in this example pin 32
+DT (B pin)             any microcontroler intput pin with interrupt -> in this example pin 21
+SW (button pin)        any microcontroler intput pin with interrupt -> in this example pin 25
 GND - to microcontroler GND
+VCC                    microcontroler VCC (then set ROTARY_ENCODER_VCC_PIN -1) 
+
+***OR in case VCC pin is not free you can cheat and connect:***
+VCC                    any microcontroler output pin - but set also ROTARY_ENCODER_VCC_PIN 25 
+                        in this example pin 25
+
 */
 #define ROTARY_ENCODER_A_PIN 32
 #define ROTARY_ENCODER_B_PIN 21
@@ -19,56 +27,36 @@ GND - to microcontroler GND
 //#define ROTARY_ENCODER_STEPS 2
 #define ROTARY_ENCODER_STEPS 4
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, 4);
-
-int test_limits = 2;
+//instead of changing here, rather change numbers above
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
 
 void rotary_onButtonClick()
 {
 	static unsigned long lastTimePressed = 0;
+	//ignore multiple press in that time milliseconds
 	if (millis() - lastTimePressed < 500)
-		return; //ignore multiple press in that time milliseconds
+	{
+		return;
+	}
 	lastTimePressed = millis();
-	//rotaryEncoder.reset();
-	//rotaryEncoder.disable();
-	/*rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
-	test_limits *= 2;*/
 	Serial.print("button pressed at ");
 	Serial.println(millis());
 }
 
 void rotary_loop()
 {
-	//lets see if anything changed
-	int16_t encoderDelta = rotaryEncoder.encoderChanged();
-
-	//optionally we can ignore whenever there is no change
-	if (encoderDelta == 0)
-		return;
-
-	//for some cases we only want to know if value is increased or decreased (typically for menu items)
-	if (encoderDelta > 0)
-		Serial.print("+");
-	if (encoderDelta < 0)
-		Serial.print("-");
-
-	//for other cases we want to know what is current value. Additionally often we only want if something changed
-	//example: when using rotary encoder to set termostat temperature, or sound volume etc
-
-	//if value is changed compared to our last read
-	if (encoderDelta != 0)
+	//dont print anything unless value changed
+	if (!rotaryEncoder.encoderChanged())
 	{
-		//now we need current value
-		int16_t encoderValue = rotaryEncoder.readEncoder();
-		//process new value. Here is simple output.
-		Serial.print("Value: ");
-		Serial.println(encoderValue);
+		return;
 	}
+
+	Serial.print("Value: ");
+	Serial.println(rotaryEncoder.readEncoder());
 }
 
 void setup()
 {
-
 	Serial.begin(115200);
 
 	//we must initialize rotary encoder
@@ -77,7 +65,9 @@ void setup()
 	rotaryEncoder.setup(
 		[] { rotaryEncoder.readEncoder_ISR(); },
 		[] { rotary_onButtonClick(); });
-	//optionally we can set boundaries and if values should cycle or not
+
+	//set boundaries and if values should cycle or not
+	//in this example we will set possible values between 0 and 1000;
 	bool circleValues = false;
 	rotaryEncoder.setBoundaries(0, 1000, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
 
@@ -95,8 +85,5 @@ void loop()
 {
 	//in loop call your custom function which will process rotary encoder values
 	rotary_loop();
-
-	delay(50);
-	if (millis() > 20000)
-		rotaryEncoder.enable();
+	delay(50); //or do whatever you need to do...
 }
