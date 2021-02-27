@@ -45,7 +45,7 @@ private:
 	uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
 	uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
 	uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
-	uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
+	int16_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
 
 	int16_t _minEncoderValue = -1 << 15;
 	int16_t _maxEncoderValue = 1 << 15;
@@ -78,6 +78,7 @@ public:
 	void enable();
 	void disable();
 	int16_t readEncoder();
+	void setEncoderValue(int16_t newValue);
 	int16_t encoderChanged();
 	ButtonState currentButtonState();
 	unsigned long getAcceleration() { return this->rotaryAccelerationCoef; }

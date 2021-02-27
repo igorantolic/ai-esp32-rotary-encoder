@@ -30,7 +30,7 @@ VCC                    any microcontroler output pin - but set also ROTARY_ENCOD
 //instead of changing here, rather change numbers above
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
 
-int test_limits = 2;
+int16_t test_limits = 2;
 
 void rotary_onButtonClick()
 {
@@ -40,10 +40,16 @@ void rotary_onButtonClick()
     lastTimePressed = millis();
     //rotaryEncoder.reset();
     //rotaryEncoder.disable();
-    /*rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
-	test_limits *= 2;*/
-    Serial.print("button pressed at ");
-    Serial.println(millis());
+    rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
+    Serial.print("new boundaries are between minimumn value ");
+    Serial.print(-test_limits);
+    Serial.print(" and maximum value");
+    Serial.println(-test_limits);
+    rotaryEncoder.reset();
+
+    if (test_limits >= 2048)
+        test_limits = 2;
+    test_limits *= 2;
 }
 
 void rotary_loop()
