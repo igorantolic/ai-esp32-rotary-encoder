@@ -27,9 +27,9 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 
 		if (currentDirection != 0)
 		{
-			int16_t prevRotaryPosition = this->encoder0Pos / this->encoderSteps;
+			long prevRotaryPosition = this->encoder0Pos / this->encoderSteps;
 			this->encoder0Pos += currentDirection;
-			int16_t newRotaryPosition = this->encoder0Pos / this->encoderSteps;
+			long newRotaryPosition = this->encoder0Pos / this->encoderSteps;
 
 			if (newRotaryPosition != prevRotaryPosition && rotaryAccelerationCoef > 1)
 			{
@@ -122,7 +122,7 @@ AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder
 	pinMode(this->encoderBPin, INPUT_PULLDOWN);
 }
 
-void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEncoderValue, bool circleValues)
+void AiEsp32RotaryEncoder::setBoundaries(long minEncoderValue, long maxEncoderValue, bool circleValues)
 {
 	this->_minEncoderValue = minEncoderValue * this->encoderSteps;
 	this->_maxEncoderValue = maxEncoderValue * this->encoderSteps;
@@ -130,20 +130,20 @@ void AiEsp32RotaryEncoder::setBoundaries(int16_t minEncoderValue, int16_t maxEnc
 	this->_circleValues = circleValues;
 }
 
-int16_t AiEsp32RotaryEncoder::readEncoder()
+long AiEsp32RotaryEncoder::readEncoder()
 {
 	return (this->encoder0Pos / this->encoderSteps);
 }
 
-void AiEsp32RotaryEncoder::setEncoderValue(int16_t newValue)
+void AiEsp32RotaryEncoder::setEncoderValue(long newValue)
 {
 	reset(newValue);
 }
 
-int16_t AiEsp32RotaryEncoder::encoderChanged()
+long AiEsp32RotaryEncoder::encoderChanged()
 {
-	int16_t _encoder0Pos = readEncoder();
-	int16_t encoder0Diff = _encoder0Pos - this->lastReadEncoder0Pos;
+	long _encoder0Pos = readEncoder();
+	long encoder0Diff = _encoder0Pos - this->lastReadEncoder0Pos;
 
 	this->lastReadEncoder0Pos = _encoder0Pos;
 
@@ -179,7 +179,7 @@ ButtonState AiEsp32RotaryEncoder::currentButtonState()
 	return buttonState;
 }
 
-void AiEsp32RotaryEncoder::reset(int16_t newValue_)
+void AiEsp32RotaryEncoder::reset(long newValue_)
 {
 	newValue_ = newValue_ * this->encoderSteps;
 	this->encoder0Pos = newValue_;

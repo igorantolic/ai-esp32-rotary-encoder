@@ -32,7 +32,7 @@ class AiEsp32RotaryEncoder
 private:
 	portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 	portMUX_TYPE buttonMux = portMUX_INITIALIZER_UNLOCKED;
-	volatile int16_t encoder0Pos = 0;
+	volatile long encoder0Pos = 0;
 
 	volatile int8_t lastMovementDirection = 0; //1 right; -1 left
 	volatile unsigned long lastMovementAt = 0;
@@ -45,13 +45,13 @@ private:
 	uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
 	uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
 	uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
-	int16_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
+	long encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
 
-	int16_t _minEncoderValue = -1 << 15;
-	int16_t _maxEncoderValue = 1 << 15;
+	long _minEncoderValue = -1 << 15;
+	long _maxEncoderValue = 1 << 15;
 
 	uint8_t old_AB;
-	int16_t lastReadEncoder0Pos;
+	long lastReadEncoder0Pos;
 	bool previous_butt_state;
 
 	ButtonState buttonState;
@@ -67,19 +67,19 @@ public:
 		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
 		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
 		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
-	void setBoundaries(int16_t minValue = -100, int16_t maxValue = 100, bool circleValues = false);
+	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);
 	void IRAM_ATTR readEncoder_ISR();
 	void IRAM_ATTR readButton_ISR();
 
 	void setup(void (*ISR_callback)(void));
 	void setup(void (*ISR_callback)(void), void (*ISR_button)(void));
 	void begin();
-	void reset(int16_t newValue = 0);
+	void reset(long newValue = 0);
 	void enable();
 	void disable();
-	int16_t readEncoder();
-	void setEncoderValue(int16_t newValue);
-	int16_t encoderChanged();
+	long readEncoder();
+	void setEncoderValue(long newValue);
+	long encoderChanged();
 	ButtonState currentButtonState();
 	unsigned long getAcceleration() { return this->rotaryAccelerationCoef; }
 	void setAcceleration(unsigned long acceleration) { this->rotaryAccelerationCoef = acceleration; }
