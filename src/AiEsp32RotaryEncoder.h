@@ -30,8 +30,11 @@ class AiEsp32RotaryEncoder
 {
 
 private:
+#if defined(ESP8266)
+#else
 	portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 	portMUX_TYPE buttonMux = portMUX_INITIALIZER_UNLOCKED;
+#endif
 	volatile long encoder0Pos = 0;
 
 	volatile int8_t lastMovementDirection = 0; //1 right; -1 left
@@ -68,9 +71,13 @@ public:
 		uint8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
 		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
 	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);
+#if defined(ESP8266)
+	ICACHE_RAM_ATTR void readEncoder_ISR();
+	ICACHE_RAM_ATTR void readButton_ISR();
+#else
 	void IRAM_ATTR readEncoder_ISR();
 	void IRAM_ATTR readButton_ISR();
-
+#endif
 	void setup(void (*ISR_callback)(void));
 	void setup(void (*ISR_callback)(void), void (*ISR_button)(void));
 	void begin();
