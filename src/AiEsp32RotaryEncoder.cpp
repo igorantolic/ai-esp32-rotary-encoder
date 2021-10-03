@@ -2,16 +2,26 @@
 //
 //
 
+#if defined(ESP8266)
+#else
 #include "esp_log.h"
 #define LOG_TAG "AiEsp32RotaryEncoder"
+#endif
 
 #include "AiEsp32RotaryEncoder.h"
 
+#if defined(ESP8266)
+ICACHE_RAM_ATTR void AiEsp32RotaryEncoder::readEncoder_ISR()
+#else
 void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
+#endif
 {
 
 	unsigned long now = millis();
+#if defined(ESP8266)
+#else
 	portENTER_CRITICAL_ISR(&(this->mux));
+#endif
 	if (this->isEnabled)
 	{
 		// code from https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino/
@@ -75,12 +85,22 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 				this->encoder0Pos = this->_circleValues ? this->_maxEncoderValue : this->_minEncoderValue;
 		}
 	}
+#if defined(ESP8266)
+#else
 	portEXIT_CRITICAL_ISR(&(this->mux));
+#endif
 }
 
+#if defined(ESP8266)
+ICACHE_RAM_ATTR void AiEsp32RotaryEncoder::readButton_ISR()
+#else
 void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
+#endif
 {
+#if defined(ESP8266)
+#else
 	portENTER_CRITICAL_ISR(&(this->buttonMux));
+#endif
 
 	uint8_t butt_state = !digitalRead(this->encoderButtonPin);
 
@@ -106,7 +126,10 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
 		Serial.println(butt_state ? "BUT_DOWN" : "BUT_UP");
 	}
 
+#if defined(ESP8266)
+#else
 	portEXIT_CRITICAL_ISR(&(this->buttonMux));
+#endif
 }
 
 AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, uint8_t encoder_VccPin, uint8_t encoderSteps)
@@ -119,8 +142,13 @@ AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder
 	this->encoderVccPin = encoder_VccPin;
 	this->encoderSteps = encoderSteps;
 
+#if defined(ESP8266)
+	pinMode(this->encoderAPin, INPUT_PULLUP);
+	pinMode(this->encoderBPin, INPUT_PULLUP);
+#else
 	pinMode(this->encoderAPin, INPUT_PULLDOWN);
 	pinMode(this->encoderBPin, INPUT_PULLDOWN);
+#endif
 }
 
 void AiEsp32RotaryEncoder::setBoundaries(long minEncoderValue, long maxEncoderValue, bool circleValues)
