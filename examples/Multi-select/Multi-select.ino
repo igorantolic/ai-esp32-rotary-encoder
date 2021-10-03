@@ -94,13 +94,16 @@ void showOrder()
     Serial.print("NEW ORDER ");
 }
 
+void IRAM_ATTR readEncoderISR()
+{
+    rotaryEncoder.readEncoder_ISR();
+}
+
 void setup()
 {
     Serial.begin(115200);
     rotaryEncoder.begin();
-    rotaryEncoder.setup(
-        [] { rotaryEncoder.readEncoder_ISR(); },
-        [] { rotary_onButtonClick(); });
+    rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setAcceleration(0);
     setForOption(0);
 }
@@ -131,5 +134,9 @@ void loop()
     if (rotaryEncoder.encoderChanged())
     {
         showSelection();
+    }
+    if (rotaryEncoder.isEncoderButtonClicked())
+    {
+        rotary_onButtonClick();
     }
 }

@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:\\Users\\Igor\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\**",
+                "C:\\Users\\Igor\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\2.0.0\\**",
+                "C:\\Users\\Igor\\Documents\\Arduino\\libraries\\**",
+                "C:\\Users\\Igor\\Documents\\Arduino\\libraries\\ai-esp32-rotary-encoder\\src",
+                "C:\\Users\\Igor\\AppData\\Local\\arduino15\\packages\\esp32\\hardware\\esp32\\**",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.17763.0",
+            "compilerPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\VC\\Tools\\MSVC\\14.16.27023\\bin\\Hostx64\\x64\\cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}

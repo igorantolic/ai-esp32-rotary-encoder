@@ -1,0 +1,5 @@
+{
+    "board": "esp32:esp32:esp32",
+    "port": "COM10",
+    "sketch": "Multi-select.ino"
+}

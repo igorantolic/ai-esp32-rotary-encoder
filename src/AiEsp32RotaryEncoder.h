@@ -81,8 +81,12 @@ public:
 	void setEncoderValue(long newValue);
 	long encoderChanged();
 	ButtonState currentButtonState();
+	ButtonState readButtonState();
 	unsigned long getAcceleration() { return this->rotaryAccelerationCoef; }
 	void setAcceleration(unsigned long acceleration) { this->rotaryAccelerationCoef = acceleration; }
 	void disableAcceleration() { setAcceleration(0); }
+
+	bool isEncoderButtonClicked(unsigned long maximumWaitMilliseconds = 300);
+	bool isEncoderButtonDown();
 };
 #endif

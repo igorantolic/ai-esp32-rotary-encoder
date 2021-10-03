@@ -43,8 +43,8 @@ void rotary_onButtonClick()
     rotaryEncoder.setBoundaries(-test_limits, test_limits, false);
     Serial.print("new boundaries are between minimumn value ");
     Serial.print(-test_limits);
-    Serial.print(" and maximum value");
-    Serial.println(-test_limits);
+    Serial.print(" and maximum value ");
+    Serial.println(test_limits);
     rotaryEncoder.reset();
 
     if (test_limits >= 2048)
@@ -54,6 +54,11 @@ void rotary_onButtonClick()
 
 void rotary_loop()
 {
+
+    if (rotaryEncoder.isEncoderButtonClicked())
+    {
+        rotary_onButtonClick();
+    }
     //lets see if anything changed
     int16_t encoderDelta = rotaryEncoder.encoderChanged();
 
@@ -81,6 +86,11 @@ void rotary_loop()
     }
 }
 
+void IRAM_ATTR readEncoderISR()
+{
+    rotaryEncoder.readEncoder_ISR();
+}
+
 void setup()
 {
 
@@ -88,10 +98,7 @@ void setup()
 
     //we must initialize rotary encoder
     rotaryEncoder.begin();
-
-    rotaryEncoder.setup(
-        [] { rotaryEncoder.readEncoder_ISR(); },
-        [] { rotary_onButtonClick(); });
+    rotaryEncoder.setup(readEncoderISR);
     //optionally we can set boundaries and if values should cycle or not
     bool circleValues = false;
     rotaryEncoder.setBoundaries(0, 1000, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)

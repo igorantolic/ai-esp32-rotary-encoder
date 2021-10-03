@@ -56,16 +56,22 @@ void rotary_loop()
         Serial.print("Value: ");
         Serial.println(rotaryEncoder.readEncoder());
     }
+    if (rotaryEncoder.isEncoderButtonClicked())
+    {
+        rotary_onButtonClick();
+    }
+}
+
+void IRAM_ATTR readEncoderISR()
+{
+    rotaryEncoder.readEncoder_ISR();
 }
 
 void setup()
 {
     Serial.begin(115200);
     rotaryEncoder.begin();
-
-    rotaryEncoder.setup(
-        [] { rotaryEncoder.readEncoder_ISR(); },
-        [] { rotary_onButtonClick(); });
+    rotaryEncoder.setup(readEncoderISR);
     bool circleValues = false;
     rotaryEncoder.setBoundaries(-1000, 1000, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.disableAcceleration();                    //acceleration is now enabled by default - disable if you dont need it

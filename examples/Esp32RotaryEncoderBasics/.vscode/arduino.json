@@ -1,0 +1,6 @@
+{
+    "board": "esp32:esp32:esp32",
+    "port": "COM10",
+    "output": "b:/dummy/Esp32RotaryEncoderBasics",
+    "sketch": "Esp32RotaryEncoderBasics.ino"
+}

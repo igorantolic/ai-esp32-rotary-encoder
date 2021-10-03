@@ -1,0 +1,20 @@
+{
+    "C_Cpp.errorSquiggles": "Enabled",
+    "files.associations": {
+        "memory": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xhash": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "string_view": "cpp",
+        "xlocale": "cpp"
+    }
+}

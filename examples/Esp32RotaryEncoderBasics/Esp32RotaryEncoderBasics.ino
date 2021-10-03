@@ -46,13 +46,20 @@ void rotary_onButtonClick()
 void rotary_loop()
 {
 	//dont print anything unless value changed
-	if (!rotaryEncoder.encoderChanged())
+	if (rotaryEncoder.encoderChanged())
 	{
-		return;
+		Serial.print("Value: ");
+		Serial.println(rotaryEncoder.readEncoder());
 	}
+	if (rotaryEncoder.isEncoderButtonClicked())
+	{
+		rotary_onButtonClick();
+	}
+}
 
-	Serial.print("Value: ");
-	Serial.println(rotaryEncoder.readEncoder());
+void IRAM_ATTR readEncoderISR()
+{
+	rotaryEncoder.readEncoder_ISR();
 }
 
 void setup()
@@ -61,11 +68,7 @@ void setup()
 
 	//we must initialize rotary encoder
 	rotaryEncoder.begin();
-
-	rotaryEncoder.setup(
-		[] { rotaryEncoder.readEncoder_ISR(); },
-		[] { rotary_onButtonClick(); });
-
+	rotaryEncoder.setup(readEncoderISR);
 	//set boundaries and if values should cycle or not
 	//in this example we will set possible values between 0 and 1000;
 	bool circleValues = false;

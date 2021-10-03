@@ -28,13 +28,16 @@ void rotary_onButtonClick()
     Serial.println(" MHz ");
 }
 
+void IRAM_ATTR readEncoderISR()
+{
+    rotaryEncoder.readEncoder_ISR();
+}
+
 void setup()
 {
     Serial.begin(115200);
     rotaryEncoder.begin();
-    rotaryEncoder.setup(
-        [] { rotaryEncoder.readEncoder_ISR(); },
-        [] { rotary_onButtonClick(); });
+    rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setBoundaries(88 * 10, 104 * 10, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(50);
     rotaryEncoder.setEncoderValue(92.1 * 10); //set default to 92.1 MHz
@@ -50,5 +53,9 @@ void loop()
     {
         Serial.print(getFrequency(), 1);
         Serial.println(" MHz ");
+    }
+    if (rotaryEncoder.isEncoderButtonClicked())
+    {
+        rotary_onButtonClick();
     }
 }

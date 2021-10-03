@@ -2,7 +2,7 @@
 #include "AiEsp32RotaryEncoderNumberSelector.h"
 #define ROTARY_ENCODER_A_PIN 32
 #define ROTARY_ENCODER_B_PIN 21
-#define ROTARY_ENCODER_BUTTON_PIN 25
+#define ROTARY_ENCODER_BUTTON_PIN 15
 #define ROTARY_ENCODER_STEPS 4
 AiEsp32RotaryEncoder *rotaryEncoder = new AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, -1, ROTARY_ENCODER_STEPS);
 AiEsp32RotaryEncoderNumberSelector numberSelector = AiEsp32RotaryEncoderNumberSelector();
@@ -25,27 +25,29 @@ So, this value is actually value you need
 In code bellow comment / uncomment example 1 or 2
 */
 
-void rotary_onButtonClick()
+void IRAM_ATTR readEncoderISR()
 {
-    static unsigned long lastTimePressed = 0;
-    if (millis() - lastTimePressed < 200)
-        return;
-    lastTimePressed = millis();
-
-    Serial.print("Selected value is ");
-    Serial.print(numberSelector.getValue(), 1);
-    Serial.println(" ***********************");
+    rotaryEncoder->readEncoder_ISR();
 }
 
 void setup()
 {
     Serial.begin(115200);
     rotaryEncoder->begin();
-    rotaryEncoder->setup(
-        [] { rotaryEncoder->readEncoder_ISR(); },
-        [] { rotary_onButtonClick(); });
-
+    rotaryEncoder->setup(readEncoderISR);
     numberSelector.attachEncoder(rotaryEncoder);
+
+    /*
+    numberSelector.setRange parameters:
+        float minValue,                set minimum value for example -12.0
+        float maxValue,                set maximum value for example 31.5
+        float step,                    set step increment, default 1, can be smaller steps like 0.5 or 10
+        bool cycleValues,              set true only if you want going to miminum value after maximum 
+        unsigned int decimals = 0      precision - how many decimal places you want, default is 0
+
+    numberSelector.setValue - sets initial value    
+    */
+
     //example 1
     //numberSelector.setRange(-12.0, 31.5, 0.5, false, 1);
     //numberSelector.setValue(24.3);
@@ -60,5 +62,12 @@ void loop()
     {
         Serial.print(numberSelector.getValue());
         Serial.println(" ");
+    }
+
+    if (rotaryEncoder->isEncoderButtonClicked())
+    {
+        Serial.print("Selected value is ");
+        Serial.print(numberSelector.getValue(), 1);
+        Serial.println(" ***********************");
     }
 }
