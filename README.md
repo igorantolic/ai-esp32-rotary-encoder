@@ -1,3 +1,12 @@
+# Support fot ESP8266 added 10/2021
+
+Support added also for ESP8266
+
+# Changes in button processing 10/2021
+
+Old button using interrupt is now obsolete.
+Please look at upadated examples how to handle click, properly initialize encoder and avoid crashing.
+
 # New feature added 02/2021 - accelerated movement
 
 In case a range to select is large, for example - select a value between 0 and 1000 and we want 785, without accelerateion you need long time to get to that number.
@@ -24,6 +33,14 @@ This library enables  easy implementation of rotary encoder functionality in you
 
 ## Installing
 
+Since 2021 you can download using Arduino, which is preffered way:
+ 
+     Sketch / include Library / Manage Libraries
+
+     in search box type "ai rotary" (without quotes)
+
+
+Alternative way (to get not yet published version)
 The downloaded code can be included as a new library into the IDE selecting the menu:
 
      Sketch / include Library / Add .Zip library

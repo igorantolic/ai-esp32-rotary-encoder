@@ -1,4 +1,4 @@
 {
     "board": "esp32:esp32:esp32",
-    "port": "COM10"
+    "port": "COM1"
 }
