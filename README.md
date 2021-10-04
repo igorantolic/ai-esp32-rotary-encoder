@@ -1,3 +1,24 @@
+# Intro
+
+Use this library to connect and use a rotary encoder with ESP32 or ESP8266.
+
+But it is a bit more than just that. **Strongly recomended is to try a few included examples to see how it works.**
+
+**The main fatures are:**
+- select a number in a predifined range. For example select a termostat value between 18 and 29 Celsius degrees.
+- you can also set **step size**. Meaning in previous example you can select temperature in steps of 0.5 degrees (18.0, 18.5 .....). Of course step can be also greater than 1 like select a motr speed 500-3000 in steps of 100 (500,600, ....,2900,3000). See examples like **FM-radio-tuner**
+- when using large range like select a number of repeating operation (1....5000) setting a desired number like 4525 cen be frustrating without using **acceleration**. Acceleration is a nice option you can use in such cases, meaning that if you rotate fast it will go like (1,2,3,5,10,15,30,50,100...) so use fast movements for getting close to desired number and then start rotating slower for a precise selection.
+- additionally there is a helper so see example Number-select which includes a NumberSellector
+- if you want to implement a menu, see example Multi-select
+- in some cases like menus, you would like to go from last item to first. Boolean cycleValues parameter set to true will do exactly that.
+
+**Using a button**
+
+You can also use a button. Version 1.3 and above has significant changes after I found previous implementation didnt fit my needs. All examples are now updated, so if you used it before and getting crashes or you dont like a button how it is working, check a new examples.
+
+For compatibility older examples still works but will become obsolete soon.
+
+
 # Support fot ESP8266 added 10/2021
 
 Support added also for ESP8266
@@ -84,9 +105,9 @@ If you didnt use suggested pins, adjust defines
 
 For ESP8266 you can use Dx as pin names like in example:
 ```c
-#define ROTARY_ENCODER_A_PIN D3
-#define ROTARY_ENCODER_B_PIN D2
-#define ROTARY_ENCODER_BUTTON_PIN D4
+#define ROTARY_ENCODER_A_PIN D6
+#define ROTARY_ENCODER_B_PIN D5
+#define ROTARY_ENCODER_BUTTON_PIN D7
 ```
 Then upload code to microcontroller.
 
