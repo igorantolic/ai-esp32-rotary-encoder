@@ -4,9 +4,9 @@
 #define ROTARY_ENCODER_B_PIN D5
 #define ROTARY_ENCODER_BUTTON_PIN D7
 #else
-#define ROTARY_ENCODER_A_PIN 32
-#define ROTARY_ENCODER_B_PIN 21
-#define ROTARY_ENCODER_BUTTON_PIN 25
+#define ROTARY_ENCODER_A_PIN 22
+#define ROTARY_ENCODER_B_PIN 23
+#define ROTARY_ENCODER_BUTTON_PIN 4
 #endif
 #define ROTARY_ENCODER_STEPS 4
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, -1, ROTARY_ENCODER_STEPS);
@@ -18,6 +18,8 @@ void IRAM_ATTR readEncoderISR()
 
 void setup()
 {
+    pinMode(ROTARY_ENCODER_A_PIN, INPUT_PULLUP);
+    pinMode(ROTARY_ENCODER_B_PIN, INPUT_PULLUP);
     Serial.begin(115200);
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
