@@ -93,12 +93,17 @@ GND - connect to microcontroler GND
 There is no need for external resistors, you can use only the encoder.
 
 3 pin side:
+
 Right pin (A pin) - connect to any microcontroler input pin with interrupt -> in the example pin 22
+
 Left pin (B pin) - connect to any microcontroler input pin with interrupt -> in the example pin 23
+
 Middle pin - connect to microcontroller Gnd
 
 2 pin side:
+
 one of the 2 pins: connect to microcontroller Gnd
+
 the other pin: connect to any microcontroller input pin -> in this example pin 25
 
 **You have to set INPUT_PULLUP of Right and Left pins with `pinMode(ROTARY_ENCODER_A_PIN, INPUT_PULLUP);` and `pinMode(ROTARY_ENCODER_B_PIN, INPUT_PULLUP);`**
