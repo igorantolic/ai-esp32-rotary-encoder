@@ -74,11 +74,11 @@ Restart the Arduino IDE and follow the examples located at
 
 This are instructions for "Rotary Encoder Module" which is actually Rotary Encoder with 2 resistors on board.  
 
-CLK (A pin) - connect to any microcontroler intput pin with interrupt -> in this example pin 32
+CLK (A pin) - connect to any microcontroler input pin with interrupt -> in this example pin 32
 
-DT (B pin) - connect to any microcontroler intput pin with interrupt -> in this example pin 21
+DT (B pin) - connect to any microcontroler input pin with interrupt -> in this example pin 21
 
-SW (button pin) - connect to any microcontroler intput pin -> in this example pin 25
+SW (button pin) - connect to any microcontroler input pin -> in this example pin 25
 
 VCC - for this you can two options:
 
@@ -87,6 +87,23 @@ a) connect to microcontroler VCC (then set ROTARY_ENCODER_VCC_PIN -1) or
 b) connect to any microcontroler output pin - in this example pin 25
 
 GND - connect to microcontroler GND
+
+## Connecting Rotary Encoder with Switch (no pcb version. The encoder is like [this](https://www.seeedstudio.com/Rotary-Encoder-with-Switch-p-667.html)) to your microcontroller ESP32, ESP8266 (or similar)
+
+There is no need for external resistors, you can use only the encoder.
+
+3 pin side:
+Right pin (A pin) - connect to any microcontroler input pin with interrupt -> in the example pin 22
+Left pin (B pin) - connect to any microcontroler input pin with interrupt -> in the example pin 23
+Middle pin - connect to microcontroller Gnd
+
+2 pin side:
+one of the 2 pins: connect to microcontroller Gnd
+the other pin: connect to any microcontroller input pin -> in this example pin 25
+
+**You have to set INPUT_PULLUP of Right and Left pins with `pinMode(ROTARY_ENCODER_A_PIN, INPUT_PULLUP);` and `pinMode(ROTARY_ENCODER_B_PIN, INPUT_PULLUP);`**
+Look example Esp32RotaryEncoderTheShortestExampleNoResistors.
+
 
 ## How to use
 
