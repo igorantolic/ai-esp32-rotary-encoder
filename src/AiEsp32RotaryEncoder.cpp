@@ -26,13 +26,13 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 	{
 		// code from https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino/
 		/**/
-		this->old_AB <<= 2; //remember previous state
+		this->old_AB <<= 2; // remember previous state
 
 		int8_t ENC_PORT = ((digitalRead(this->encoderBPin)) ? (1 << 1) : 0) | ((digitalRead(this->encoderAPin)) ? (1 << 0) : 0);
 
-		this->old_AB |= (ENC_PORT & 0x03); //add current state
+		this->old_AB |= (ENC_PORT & 0x03); // add current state
 
-		//this->encoder0Pos += ( this->enc_states[( this->old_AB & 0x0f )]);
+		// this->encoder0Pos += ( this->enc_states[( this->old_AB & 0x0f )]);
 		int8_t currentDirection = (this->enc_states[(this->old_AB & 0x0f)]); //-1,0 or 1
 
 		if (currentDirection != 0)
@@ -43,8 +43,8 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 
 			if (newRotaryPosition != prevRotaryPosition && rotaryAccelerationCoef > 1)
 			{
-				//additional movements cause acceleration?
-				// at X ms, there should be no acceleration.
+				// additional movements cause acceleration?
+				//  at X ms, there should be no acceleration.
 				unsigned long accelerationLongCutoffMillis = 200;
 				// at Y ms, we want to have maximum acceleration
 				unsigned long accelerationShortCutffMillis = 4;
@@ -78,7 +78,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readEncoder_ISR()
 				this->lastMovementDirection = currentDirection;
 			}
 
-			//respect limits
+			// respect limits
 			if (this->encoder0Pos > (this->_maxEncoderValue))
 				this->encoder0Pos = this->_circleValues ? this->_minEncoderValue : this->_maxEncoderValue;
 			if (this->encoder0Pos < (this->_minEncoderValue))
@@ -132,7 +132,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
 #endif
 }
 
-AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, uint8_t encoder_VccPin, uint8_t encoderSteps)
+AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps)
 {
 	this->old_AB = 0;
 
@@ -184,7 +184,7 @@ void AiEsp32RotaryEncoder::setup(void (*ISR_callback)(void), void (*ISR_button)(
 	attachInterrupt(digitalPinToInterrupt(this->encoderAPin), ISR_callback, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(this->encoderBPin), ISR_callback, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, RISING);
-	//attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, CHANGE);
+	// attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, CHANGE);
 }
 
 void AiEsp32RotaryEncoder::setup(void (*ISR_callback)(void))
@@ -199,7 +199,7 @@ void AiEsp32RotaryEncoder::begin()
 	if (this->encoderVccPin >= 0)
 	{
 		pinMode(this->encoderVccPin, OUTPUT);
-		digitalWrite(this->encoderVccPin, 1); //Vcc for encoder
+		digitalWrite(this->encoderVccPin, 1); // Vcc for encoder
 	}
 
 	// Initialize rotary encoder reading and decoding
@@ -218,7 +218,7 @@ ButtonState AiEsp32RotaryEncoder::currentButtonState()
 ButtonState AiEsp32RotaryEncoder::readButtonState()
 {
 	ButtonState _buttonState = buttonState;
-	//buttonState =
+	// buttonState =
 	return buttonState;
 }
 
@@ -255,21 +255,21 @@ bool AiEsp32RotaryEncoder::isEncoderButtonClicked(unsigned long maximumWaitMilli
 		}
 		return false;
 	}
-	delay(30); //debounce
+	delay(30); // debounce
 	button = 1 - digitalRead(encoderButtonPin);
 	if (!button)
 	{
 		return false;
 	}
 
-	//wait release of button but only maximumWaitMilliseconds
+	// wait release of button but only maximumWaitMilliseconds
 	wasTimeouted = false;
 	unsigned long waitUntil = millis() + maximumWaitMilliseconds;
 	while (1 - digitalRead(encoderButtonPin))
 	{
 		if (millis() > waitUntil)
 		{
-			//button not released until timeout
+			// button not released until timeout
 			wasTimeouted = true;
 			return false;
 		}
