@@ -132,7 +132,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
 #endif
 }
 
-AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, uint8_t encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps)
+AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, int encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps)
 {
 	this->old_AB = 0;
 
@@ -183,7 +183,8 @@ void AiEsp32RotaryEncoder::setup(void (*ISR_callback)(void), void (*ISR_button)(
 {
 	attachInterrupt(digitalPinToInterrupt(this->encoderAPin), ISR_callback, CHANGE);
 	attachInterrupt(digitalPinToInterrupt(this->encoderBPin), ISR_callback, CHANGE);
-	attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, RISING);
+	if (this->encoderButtonPin >= 0)
+		attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, RISING);
 	// attachInterrupt(digitalPinToInterrupt(this->encoderButtonPin), ISR_button, CHANGE);
 }
 
