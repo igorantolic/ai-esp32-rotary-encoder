@@ -46,8 +46,8 @@ private:
 
 	uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN;
 	uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN;
-	int encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
-	int encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
+	int8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN;
+	int8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN;
 	long encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS;
 
 	long _minEncoderValue = -1 << 15;
@@ -67,8 +67,8 @@ public:
 	AiEsp32RotaryEncoder(
 		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
-		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
-		int encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
+		int8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
+		int8_t encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
 		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
 	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);
 #if defined(ESP8266)
