@@ -132,7 +132,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
 #endif
 }
 
-AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, int encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps)
+AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, int8_t encoder_ButtonPin, int8_t encoder_VccPin, uint8_t encoderSteps)
 {
 	this->old_AB = 0;
 
