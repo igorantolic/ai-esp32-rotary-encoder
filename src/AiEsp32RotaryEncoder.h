@@ -67,7 +67,7 @@ public:
 	AiEsp32RotaryEncoder(
 		uint8_t encoderAPin = AIESP32ROTARYENCODER_DEFAULT_A_PIN,
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
-		uint8_t encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
+		int encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
 		int encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
 		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
 	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);

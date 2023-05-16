@@ -1,4 +1,6 @@
 {
-    "board": "esp32:esp32:esp32",
-    "port": "COM1"
+    "board": "esp8266:esp8266:d1_mini",
+    "port": "COM6",
+    "configuration": "xtal=80,vt=flash,exception=disabled,stacksmash=disabled,ssl=all,mmu=3232,non32xfer=fast,eesz=4M2M,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=921600",
+    "sketch": "examples\\Number-select\\Number-select.ino"
 }
