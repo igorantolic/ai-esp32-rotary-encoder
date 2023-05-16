@@ -117,6 +117,7 @@ void setup()
    */
     //rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
     rotaryEncoder.setAcceleration(250); //or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
+    Serial.print("\nPress rotary button to change boundaries ");
 }
 
 void loop()

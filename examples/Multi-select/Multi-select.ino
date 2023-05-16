@@ -19,6 +19,7 @@ At the end select if you want fast delivery for extra 2$
 String options[] = {"Select fast food", "How many (1...10)", "Do you want fast delicery for 2$?"};
 
 String foods[] = {"Hot dog", "Pizza", "Hamburger", "Cheeseburger"};
+//String foods[] = {"   1", "   2", "   3", "   4"};
 String selectedFood = "";
 
 String delivery[] = {"Normal", "Fast for extra 2$"};
@@ -43,7 +44,7 @@ void setForOption(int newOption)
         rotaryEncoder.setEncoderValue(1);
         break;
     case 2:
-        rotaryEncoder.setBoundaries(0, 1, true); //select delivery
+        rotaryEncoder.setBoundaries(0, 1, false); //select delivery
         rotaryEncoder.setEncoderValue(0);
         break;
 
@@ -111,6 +112,11 @@ void setup()
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setAcceleration(0);
+
+    rotaryEncoder.correctionOffset=2; //try with zero or ROTARY_ENCODER_STEPS/2
+    rotaryEncoder.isButtonPulldown = false;
+	  rotaryEncoder.areEncoderPinsPulldownforEsp32 = true;
+
     setForOption(0);
 }
 

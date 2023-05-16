@@ -53,7 +53,7 @@ private:
 	long _minEncoderValue = -1 << 15;
 	long _maxEncoderValue = 1 << 15;
 
-	uint8_t old_AB;
+	int8_t old_AB;
 	long lastReadEncoder0Pos;
 	bool previous_butt_state;
 
@@ -71,6 +71,9 @@ public:
 		int encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
 		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
 	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);
+	int correctionOffset=2;
+	bool isButtonPulldown = false;
+	bool areEncoderPinsPulldownforEsp32 = true;
 #if defined(ESP8266)
 	ICACHE_RAM_ATTR void readEncoder_ISR();
 	ICACHE_RAM_ATTR void readButton_ISR();
