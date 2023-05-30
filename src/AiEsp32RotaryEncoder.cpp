@@ -263,7 +263,7 @@ void AiEsp32RotaryEncoder::begin()
 	#if defined(ESP8266)
 		pinMode(this->encoderButtonPin, INPUT_PULLUP);
 	#else
-		pinMode(this->encoderButtonPin,isButtonPulldown?INPUT_PULLDOWN, INPUT_PULLUP);
+		pinMode(this->encoderButtonPin,isButtonPulldown?INPUT_PULLDOWN: INPUT_PULLUP);
 	#endif
 		
 	}

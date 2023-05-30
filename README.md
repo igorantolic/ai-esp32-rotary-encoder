@@ -1,13 +1,22 @@
 # Intro
 
-Use this library to connect and use a rotary encoder with ESP32 or ESP8266.
+Use this library to connect and use a **rotary encoder** with **ESP32** or **ESP8266**.
 
-But it is a bit more than just that. **Strongly recomended is to try a few included examples to see how it works.**
+But it is a bit more than just that. 
+
+**Strongly recomended is to try a few included examples to see how it works.**
 
 **The main fatures are:**
 - select a number in a predifined range. For example select a termostat value between 18 and 29 Celsius degrees.
 - you can also set **step size**. Meaning in previous example you can select temperature in steps of 0.5 degrees (18.0, 18.5 .....). Of course step can be also greater than 1 like select a motr speed 500-3000 in steps of 100 (500,600, ....,2900,3000). See examples like **FM-radio-tuner**
 - when using large range like select a number of repeating operation (1....5000) setting a desired number like 4525 cen be frustrating without using **acceleration**. Acceleration is a nice option you can use in such cases, meaning that if you rotate fast it will go like (1,2,3,5,10,15,30,50,100...) so use fast movements for getting close to desired number and then start rotating slower for a precise selection.
+
+To disable use
+
+```
+rotaryEncoder.disableAcceleration();
+```
+
 - additionally there is a helper so see example Number-select which includes a NumberSellector
 - if you want to implement a menu, see example Multi-select
 - in some cases like menus, you would like to go from last item to first. Boolean cycleValues parameter set to true will do exactly that.
@@ -17,6 +26,15 @@ But it is a bit more than just that. **Strongly recomended is to try a few inclu
 You can also use a button. Version 1.3 and above has significant changes after I found previous implementation didnt fit my needs. All examples are now updated, so if you used it before and getting crashes or you dont like a button how it is working, check a new examples.
 
 For compatibility older examples still works but will become obsolete soon.
+
+**update 2023-05 for button custom iplementation (long click...)**
+
+Some people asked how they can handle more complex button events like double click, short press, long press.
+
+There is an example Esp32RotaryEncoderButtonOptions.ino
+
+You will fint there how to implement long press, how to invert button state, but also get ideas how to implement double click.
+The code is nonblocking so try to rotate a rotary encoder while the button is down.
 
 
 # Support fot ESP8266 added 10/2021
@@ -51,7 +69,7 @@ Rotary encoder main interrupt code is extracted from (https://github.com/marcmer
 ## Description
 
 This library enables  easy implementation of rotary encoder functionality in your application for ESP32, ESP8266 (or similar microcontroller).
-
+-
 ## Installing
 
 Since 2021 you can download using Arduino, which is preffered way:
@@ -108,6 +126,22 @@ the other pin: connect to any microcontroller input pin -> in this example pin 2
 
 **You have to set INPUT_PULLUP of Right and Left pins with `pinMode(ROTARY_ENCODER_A_PIN, INPUT_PULLUP);` and `pinMode(ROTARY_ENCODER_B_PIN, INPUT_PULLUP);`**
 Look example Esp32RotaryEncoderTheShortestExampleNoResistors.
+
+
+
+There is a new option areEncoderPinsPulldownforEsp32. By default it is true, but in case you use ESP32 you can set it to true. 
+It doesn't make any change for ESP8266, only ESP32.
+
+```
+rotaryEncoder.areEncoderPinsPulldownforEsp32 = false;
+```
+
+There is a new option isButtonPulldown. By default it is false, but in case you use ESP32 you can set it to true. See Multi-select example.
+It doesn't make any change for ESP8266, only ESP32.
+
+```
+rotaryEncoder.isButtonPulldown = true;
+```
 
 
 ## How to use
