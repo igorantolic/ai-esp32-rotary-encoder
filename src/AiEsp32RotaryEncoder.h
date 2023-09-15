@@ -17,6 +17,12 @@
 #define AIESP32ROTARYENCODER_DEFAULT_VCC_PIN -1
 #define AIESP32ROTARYENCODER_DEFAULT_STEPS 2
 
+#if defined(ESP8266)
+	#define AIESP32ROTARYENCODER_DEFAULT_PINMODE_PULLUP true
+#else
+	#define AIESP32ROTARYENCODER_DEFAULT_PINMODE_PULLUP false
+#endif
+
 typedef enum
 {
 	BUT_DOWN = 0,
@@ -69,11 +75,12 @@ public:
 		uint8_t encoderBPin = AIESP32ROTARYENCODER_DEFAULT_B_PIN,
 		int encoderButtonPin = AIESP32ROTARYENCODER_DEFAULT_BUT_PIN,
 		int encoderVccPin = AIESP32ROTARYENCODER_DEFAULT_VCC_PIN,
-		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS);
+		uint8_t encoderSteps = AIESP32ROTARYENCODER_DEFAULT_STEPS,
+		bool pullUp = AIESP32ROTARYENCODER_DEFAULT_PINMODE_PULLUP
+		);
 	void setBoundaries(long minValue = -100, long maxValue = 100, bool circleValues = false);
 	int correctionOffset=2;
 	bool isButtonPulldown = false;
-	bool areEncoderPinsPulldownforEsp32 = true;
 #if defined(ESP8266)
 	ICACHE_RAM_ATTR void readEncoder_ISR();
 	ICACHE_RAM_ATTR void readButton_ISR();
