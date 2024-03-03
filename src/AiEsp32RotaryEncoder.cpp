@@ -190,7 +190,7 @@ void IRAM_ATTR AiEsp32RotaryEncoder::readButton_ISR()
 #endif
 }
 
-AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, int encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps)
+AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder_BPin, int encoder_ButtonPin, int encoder_VccPin, uint8_t encoderSteps, bool areEncoderPinsPulldown_forEsp32)
 {
 	this->old_AB = 0;
 
@@ -199,7 +199,7 @@ AiEsp32RotaryEncoder::AiEsp32RotaryEncoder(uint8_t encoder_APin, uint8_t encoder
 	this->encoderButtonPin = encoder_ButtonPin;
 	this->encoderVccPin = encoder_VccPin;
 	this->encoderSteps = encoderSteps;
-
+	areEncoderPinsPulldownforEsp32 = areEncoderPinsPulldown_forEsp32;
 #if defined(ESP8266)
 	pinMode(this->encoderAPin, INPUT_PULLUP);
 	pinMode(this->encoderBPin, INPUT_PULLUP);
